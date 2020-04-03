@@ -14,6 +14,15 @@ const courseRouter = require('./routes/course');
 
 const app = express();
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // eslint-disable-next-line max-len
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+});
+
+
 // GLOBAL MIDDLEWARES
 // Set securrity http headers
 app.use(helmet());
