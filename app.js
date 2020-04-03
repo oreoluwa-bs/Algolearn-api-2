@@ -5,6 +5,10 @@ const helmet = require('helmet');
 // const xss = require('xss-clean');
 // const hpp = require('hpp');
 
+
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/error');
+
 // Routes
 const courseRouter = require('./routes/course');
 
@@ -14,6 +18,16 @@ const app = express();
 // Set securrity http headers
 app.use(helmet());
 
+// Body Parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/api/v1/course', courseRouter);
+
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+app.use(globalErrorHandler);
 
 module.exports = app;

@@ -1,9 +1,26 @@
+/* eslint-disable consistent-return */
 const Course = require('../models/course');
 const factory = require('./handlerFactory');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
 exports.getAllCourses = factory.getAll(Course);
 
-exports.getCourse = factory.getOne(Course);
+exports.getCourse = catchAsync(async (req, res, next) => {
+    const doc = await Course.findOne({ slug: req.params.slug });
+    // .populate({});
+
+    if (!doc) {
+        return next(new AppError('No document found with that ID', 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            data: doc,
+        },
+    });
+});
 
 exports.createCourse = factory.createOne(Course);
 
