@@ -18,11 +18,44 @@ const app = express();
 // GLOBAL MIDDLEWARES
 // Set securrity http headers
 app.use(helmet());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+});
+
+// Limit the amount of requests sent from a specific IP
+const limiter = rateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again in an hour!',
+});
+
+app.use('/api', limiter);
 
 // Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Data sanitization against NoSQL query Injection
+app.use(mongoSanitze());
+
+// Data sanitization agains xss
+app.use(xss());
+
+// Prevent parameter pollution
+app.use(hpp({
+    whitelist: [
+        'duration',
+        'ratingsAverage',
+        'ratingsQuatity',
+        'maxGroupSize',
+        'difficulty',
+        'price',
+    ],
+}));
+
+
+// ROUTES
 app.use('/api/v1/course', courseRouter);
 app.use('/api/v1/user', userRouter);
 

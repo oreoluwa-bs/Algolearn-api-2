@@ -1,15 +1,16 @@
 const express = require('express');
-const CourseControl = require('../controllers/course');
+const courseControl = require('../controllers/course');
+const authControl = require('../controllers/auth');
 
 const router = express.Router();
 
 router.route('/')
-    .get(CourseControl.getAllCourses)
-    .post(CourseControl.createCourse);
+    .get(courseControl.getAllCourses)
+    .post(authControl.protect, authControl.restrictTo('tutor'), courseControl.setCourseUserIds, courseControl.createCourse);
 
 router.route('/:slug')
-    .get(CourseControl.getCourse)
-    .patch(CourseControl.updateCourse)
-    .delete(CourseControl.deleteCourse);
+    .get(courseControl.getCourse)
+    .patch(authControl.protect, authControl.restrictTo('tutor'), courseControl.updateCourse)
+    .delete(authControl.protect, authControl.restrictTo('tutor'), courseControl.deleteCourse);
 
 module.exports = router;

@@ -4,6 +4,13 @@ const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+
+exports.setCourseUserIds = (req, res, next) => {
+    // Allows nested routes
+    if (!req.body.user) req.body.author = req.user.id;
+    next();
+};
+
 exports.getAllCourses = factory.getAll(Course);
 
 exports.getCourse = catchAsync(async (req, res, next) => {
