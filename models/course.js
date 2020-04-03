@@ -39,10 +39,10 @@ const courseSchema = new mongoose.Schema({
         default: 0,
         required: [true, 'A tour must have a price'],
     },
-    author: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
-    },
+    // author: {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'User',
+    // },
     color: String,
     createdAt: {
         type: Date,
