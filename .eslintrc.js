@@ -18,6 +18,5 @@ module.exports = {
             "error",
             4
         ],
-        // "no-console": true,
     }
 };
