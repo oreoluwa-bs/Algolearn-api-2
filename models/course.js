@@ -28,7 +28,7 @@ const courseSchema = new mongoose.Schema({
         default: 3,
         min: [1, 'Rating must be above 1.0'],
         max: [5, 'Rating must be below 5.0'],
-        // set: (val) => Math.round(val * 10) / 10,
+        set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuatity: {
         type: Number,
@@ -56,6 +56,13 @@ const courseSchema = new mongoose.Schema({
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+});
+
+// Virtual Data
+courseSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'course',
+    localField: '_id',
 });
 
 // DOCUMENT MIDDLEWARE

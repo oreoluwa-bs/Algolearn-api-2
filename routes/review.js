@@ -1,9 +1,19 @@
 const express = require('express');
-// const ReviewController = require('../controllers/review')
+const reviewController = require('../controllers/review');
+const authController = require('../controllers/auth');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.route('/');
-// .get()
+router.use(authController.protect);
+
+router.route('/')
+    .get(reviewController.getAllReviews)
+    .post(reviewController.setCourseUserIds,
+        reviewController.createReview);
+
+router.route('/:id')
+    .get(reviewController.getReview)
+    .patch(reviewController.updateReview)
+    .delete(reviewController.deleteReview);
 
 module.exports = router;

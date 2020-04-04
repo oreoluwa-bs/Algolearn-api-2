@@ -59,9 +59,9 @@ app.use(hpp({
 
 
 // ROUTES
-app.use('/api/v1/course', courseRouter);
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/courses', courseRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

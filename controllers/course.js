@@ -14,8 +14,8 @@ exports.setCourseUserIds = (req, res, next) => {
 exports.getAllCourses = factory.getAll(Course);
 
 exports.getCourse = catchAsync(async (req, res, next) => {
-    const doc = await Course.findOne({ slug: req.params.slug });
-    // .populate({});
+    const doc = await Course.findOne({ slug: req.params.slug })
+        .populate('reviews');
 
     if (!doc) {
         return next(new AppError('No document found with that ID', 404));
