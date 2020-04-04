@@ -39,10 +39,10 @@ const courseSchema = new mongoose.Schema({
         default: 0,
         required: [true, 'A tour must have a price'],
     },
-    // author: {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'User',
-    // },
+    author: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+    },
     color: String,
     createdAt: {
         type: Date,
@@ -74,7 +74,7 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'author',
-        select: '-__v -passwordChangedAt',
+        select: 'firstname lastname _id',
     });
     next();
 });
