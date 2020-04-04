@@ -34,6 +34,10 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    lessonsQuantity: {
+        type: Number,
+        default: 0,
+    },
     price: {
         type: Number,
         default: 0,
@@ -64,6 +68,12 @@ courseSchema.virtual('reviews', {
     foreignField: 'course',
     localField: '_id',
 });
+courseSchema.virtual('lessons', {
+    ref: 'Lesson',
+    foreignField: 'course',
+    localField: '_id',
+});
+
 
 // DOCUMENT MIDDLEWARE
 courseSchema.pre('save', function (next) {
