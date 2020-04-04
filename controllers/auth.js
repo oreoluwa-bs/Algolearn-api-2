@@ -74,6 +74,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     ) {
         // eslint-disable-next-line prefer-destructuring
         token = req.headers.authorization.split(' ')[1];
+    } else if (req.qcookies.jwt) {
+        token = req.cookies.jwt;
     }
     if (!token) {
         return next(new AppError('You are not logged in! Please login in to get access', 401));
