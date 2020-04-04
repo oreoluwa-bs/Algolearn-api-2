@@ -63,10 +63,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
     // only runs if the password has been modified
     if (!this.isModified('password')) return next();
-
-    // hash the password with a cost of 12
     this.password = await bcrypt.hash(this.password, 12);
-
     next();
 });
 
@@ -82,6 +79,17 @@ userSchema.pre('save', function (next) {
 userSchema.pre(/^find/, function (next) {
     // This points to current query
     this.find({ active: { $ne: false } });
+    next();
+});
+
+userSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'enrolledCourses',
+        select: '-reviews -price',
+    }).populate({
+        path: 'createdCourses',
+        select: '-reviews -price',
+    });
     next();
 });
 
