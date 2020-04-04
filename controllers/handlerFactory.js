@@ -69,7 +69,7 @@ exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
 
 exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     let filter = {};
-    if (req.params.courseId) filter = { tour: req.params.courseId };
+    if (req.params.courseId) filter = { course: req.params.courseId };
 
 
     // EXECUTE QUERY
