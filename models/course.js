@@ -91,7 +91,7 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'author',
-        select: 'firstname lastname _id',
+        select: '+firstname +lastname -enrolledCourses -createdCourses',
     });
     next();
 });

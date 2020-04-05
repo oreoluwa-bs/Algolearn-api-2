@@ -35,7 +35,7 @@ reviewSchema.index({ course: 1, user: 1 }, { unique: true });
 reviewSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        select: 'firstname lastname photo',
+        select: '+firstname +lastname +photo -enrolledCourses -createdCourses',
     });
 
     next();

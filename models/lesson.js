@@ -1,5 +1,6 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
+const Course = require('./course');
 
 const lessonSchema = new mongoose.Schema({
     title: {
@@ -38,10 +39,9 @@ lessonSchema.statics.calcLessonCount = async function (courseId) {
             },
         },
     ]);
-    console.log(stats);
-    // await Course.findByIdAndUpdate(courseId, {
-    //     lessonsQuatity: stats[0].nRatings,
-    // });
+    await Course.findByIdAndUpdate(courseId, {
+        lessonsQuantity: stats[0].nLessons,
+    });
 };
 
 lessonSchema.post('save', function () {
