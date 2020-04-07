@@ -56,7 +56,7 @@ reviewSchema.statics.calcAverageRatings = async function (courseId) {
     ]);
     await Course.findByIdAndUpdate(courseId, {
         ratingsAverage: stats[0].avgRating,
-        ratingsQuatity: stats[0].nRatings,
+        ratingsQuantity: stats[0].nRatings,
     });
 };
 
