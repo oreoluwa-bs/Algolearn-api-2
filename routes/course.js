@@ -14,8 +14,14 @@ router.route('/')
     .post(authControl.protect, authControl.restrictTo('tutor'), courseControl.setCourseUserIds, courseControl.createCourse);
 
 router.route('/:slug')
-    .get(courseControl.getCourse)
+    .get(courseControl.getCourse);
+
+router.route('/:id')
     .patch(authControl.protect, authControl.restrictTo('tutor'), courseControl.updateCourse)
     .delete(authControl.protect, authControl.restrictTo('tutor'), courseControl.deleteCourse);
+
+router.route('/enroll/:courseId')
+    .patch(authControl.protect, courseControl.enrollInCourse)
+    .delete(authControl.protect, courseControl.unEnrollInCourse);
 
 module.exports = router;

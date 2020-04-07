@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./user');
 
 const courseSchema = new mongoose.Schema({
     title: {
@@ -55,7 +57,7 @@ const courseSchema = new mongoose.Schema({
     },
     isPublished: {
         type: Boolean,
-        default: false,
+        default: true,
     },
 }, {
     toJSON: { virtuals: true },
@@ -77,11 +79,17 @@ courseSchema.virtual('lessons', {
 
 // DOCUMENT MIDDLEWARE
 courseSchema.pre('save', function (next) {
-    // eslint-disable-next-line no-underscore-dangle
     const id = this._id.toString();
     this.slug = slugify(`${this.title} ${id.slice(id.length - 4)}`, { lower: true });
     next();
 });
+
+courseSchema.post('save', async function () {
+    const author = await User.findById(this.author);
+    author.createdCourses.push(this._id);
+    author.save();
+});
+
 
 // QUERY MIDDLEWARE
 courseSchema.pre(/^find/, function (next) {
@@ -91,7 +99,7 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'author',
-        select: '+firstname +lastname -enrolledCourses -createdCourses',
+        select: '+firstname +lastname -enrolledCourses -createdCourses -email',
     });
     next();
 });

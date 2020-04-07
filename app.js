@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const mongoSanitze = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 
 const AppError = require('./utils/appError');
@@ -20,12 +21,7 @@ const app = express();
 // GLOBAL MIDDLEWARES
 // Set securrity http headers
 app.use(helmet());
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    next();
-});
+app.use(cors());
 
 // Limit the amount of requests sent from a specific IP
 const limiter = rateLimit({
