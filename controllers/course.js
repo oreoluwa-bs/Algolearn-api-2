@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 const Course = require('../models/course');
-const User = require('../models/user');
+// const User = require('../models/user');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -37,40 +37,40 @@ exports.updateCourse = factory.updateOne(Course);
 
 exports.deleteCourse = factory.deleteOne(Course);
 
-exports.enrollInCourse = catchAsync(async (req, res, next) => {
-    const doc = await Course.findById(req.params.courseId);
-    if (!doc) {
-        return next(new AppError('No document found with that ID', 404));
-    }
+// exports.enrollInCourse = catchAsync(async (req, res, next) => {
+//     const doc = await Course.findById(req.params.courseId);
+//     if (!doc) {
+//         return next(new AppError('No document found with that ID', 404));
+//     }
 
-    const student = await User.findById(req.user);
+//     const student = await User.findById(req.user);
 
-    if (!student) {
-        return next(new AppError('No document found with that ID', 404));
-    }
+//     if (!student) {
+//         return next(new AppError('No document found with that ID', 404));
+//     }
 
-    student.enrolledCourses.push(doc._id);
-    student.save();
+//     student.enrolledCourses.push(doc._id);
+//     student.save();
 
-    res.status(200).json({
-        status: 'success',
-    });
-});
+//     res.status(200).json({
+//         status: 'success',
+//     });
+// });
 
-exports.unEnrollInCourse = catchAsync(async (req, res, next) => {
-    const doc = await Course.findById(req.params.courseId);
-    if (!doc) {
-        return next(new AppError('No document found with that ID', 404));
-    }
+// exports.unEnrollInCourse = catchAsync(async (req, res, next) => {
+//     const doc = await Course.findById(req.params.courseId);
+//     if (!doc) {
+//         return next(new AppError('No document found with that ID', 404));
+//     }
 
-    const student = await User.findById(req.user);
-    if (!student) {
-        return next(new AppError('No document found with that ID', 404));
-    }
-    const userEnrolledCourses = student.enrolledCourses.filter((el) => el !== doc._id);
-    student.enrolledCourses = userEnrolledCourses;
-    student.save();
-    res.status(200).json({
-        status: 'success',
-    });
-});
+//     const student = await User.findById(req.user);
+//     if (!student) {
+//         return next(new AppError('No document found with that ID', 404));
+//     }
+//     const userEnrolledCourses = student.enrolledCourses.filter((el) => el !== doc._id);
+//     student.enrolledCourses = userEnrolledCourses;
+//     student.save();
+//     res.status(200).json({
+//         status: 'success',
+//     });
+// });

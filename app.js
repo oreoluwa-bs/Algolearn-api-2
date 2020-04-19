@@ -14,6 +14,7 @@ const globalErrorHandler = require('./controllers/error');
 const courseRouter = require('./routes/course');
 const userRouter = require('./routes/user');
 const reviewRouter = require('./routes/review');
+// const enrollRouter = require('./routes/enroll');
 const lessonRouter = require('./routes/lesson');
 
 const app = express();
@@ -60,6 +61,7 @@ app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/lessons', lessonRouter);
+// app.use('/api/v1/enrolls', enrollRouter);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

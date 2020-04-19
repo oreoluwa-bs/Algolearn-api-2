@@ -71,7 +71,6 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.courseId) filter = { course: req.params.courseId };
 
-
     // EXECUTE QUERY
     const features = new APIFeatures(Model.find(filter), req.query)
         .filter()

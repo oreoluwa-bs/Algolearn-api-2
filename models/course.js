@@ -50,6 +50,10 @@ const courseSchema = new mongoose.Schema({
         ref: 'User',
     },
     color: String,
+    enrollmentCount: {
+        type: Number,
+        default: 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -99,7 +103,7 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'author',
-        select: '+firstname +lastname -enrolledCourses -createdCourses -email',
+        select: '+firstname +lastname -createdCourses -email -enrollmentCount -role',
     });
     next();
 });

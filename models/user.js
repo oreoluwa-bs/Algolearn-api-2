@@ -34,12 +34,10 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         select: false,
     },
-    enrolledCourses: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Course',
-        },
-    ],
+    enrollmentCount: {
+        type: Number,
+        default: 0,
+    },
     createdCourses: [
         {
             type: mongoose.Schema.ObjectId,
@@ -57,6 +55,12 @@ const userSchema = new mongoose.Schema({
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+});
+
+userSchema.virtual('enrolledCourses', {
+    ref: 'Enrollment',
+    foreignField: 'user',
+    localField: '_id',
 });
 
 // DOCUMENT MIDDLEWARE
@@ -83,13 +87,15 @@ userSchema.pre(/^find/, function (next) {
 });
 
 userSchema.pre(/^find/, function (next) {
+    // this.populate({
+    //     path: 'enrolledCourses',
+    //     select: '-reviews -price -lessons -reviews',
+    // })
     this.populate({
-        path: 'enrolledCourses',
-        select: '-reviews -price -lessons -reviews',
-    }).populate({
         path: 'createdCourses',
         select: '-reviews -price -lessons -reviews',
     });
+
     next();
 });
 

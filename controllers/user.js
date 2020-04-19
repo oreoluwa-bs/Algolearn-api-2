@@ -54,7 +54,7 @@ exports.createUser = (req, res) => {
 
 exports.getAllUsers = factory.getAll(User);
 
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User, 'enrolledCourses');
 
 // Do not update passwords with this
 exports.updateUser = factory.updateOne(User);
