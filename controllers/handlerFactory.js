@@ -70,6 +70,7 @@ exports.getOne = (Model, popOptions) => catchAsync(async (req, res, next) => {
 exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     let filter = {};
     if (req.params.courseId) filter = { course: req.params.courseId };
+    if (req.user && req.originalUrl.includes('/users/me/enrolls/')) filter = { ...filter, user: req.user.id };
 
     // EXECUTE QUERY
     const features = new APIFeatures(Model.find(filter), req.query)
