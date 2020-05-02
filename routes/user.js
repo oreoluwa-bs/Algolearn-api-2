@@ -27,5 +27,8 @@ router.route('/me')
     .patch(userControl.getMe, userControl.updateMe)
     .delete(userControl.getMe, userControl.deleteMe);
 
+// router.route('/me/createdCourses')
+//     .get(userControl.getMe, userControl.getMyCreatedCourses);
+
 
 module.exports = router;

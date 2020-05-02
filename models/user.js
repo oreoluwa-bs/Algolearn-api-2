@@ -38,12 +38,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    createdCourses: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Course',
-        },
-    ],
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -62,6 +56,12 @@ const userSchema = new mongoose.Schema({
 //     foreignField: 'user',
 //     localField: '_id',
 // });
+// createdCourses: [
+//     {
+//         type: mongoose.Schema.ObjectId,
+//         ref: 'Course',
+//     },
+// ],
 
 // DOCUMENT MIDDLEWARE
 userSchema.pre('save', async function (next) {
@@ -86,18 +86,18 @@ userSchema.pre(/^find/, function (next) {
     next();
 });
 
-userSchema.pre(/^find/, function (next) {
-    // this.populate({
-    //     path: 'enrolledCourses',
-    //     select: '-reviews -price -lessons -reviews',
-    // })
-    this.populate({
-        path: 'createdCourses',
-        select: '-reviews -price -lessons -reviews',
-    });
+// userSchema.pre(/^find/, function (next) {
+//     // this.populate({
+//     //     path: 'enrolledCourses',
+//     //     select: '-reviews -price -lessons -reviews',
+//     // })
+//     this.populate({
+//         path: 'createdCourses',
+//         select: '-reviews -price -lessons -reviews',
+//     });
 
-    next();
-});
+//     next();
+// });
 
 
 // INSTANCE METHODS

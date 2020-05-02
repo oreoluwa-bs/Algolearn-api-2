@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 const User = require('../models/user');
+// const Course = require('../models/course');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
@@ -60,3 +61,7 @@ exports.getUser = factory.getOne(User, 'enrolledCourses');
 exports.updateUser = factory.updateOne(User);
 
 exports.deleteUser = factory.deleteOne(User);
+
+// exports.getMyCreatedCourses = factory.getAll(Course);
+
+// exports.getCreatedCourse = factory.getOne(Course);
