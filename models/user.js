@@ -57,11 +57,11 @@ const userSchema = new mongoose.Schema({
     toObject: { virtuals: true },
 });
 
-userSchema.virtual('enrolledCourses', {
-    ref: 'Enrollment',
-    foreignField: 'user',
-    localField: '_id',
-});
+// userSchema.virtual('enrolledCourses', {
+//     ref: 'Enrollment',
+//     foreignField: 'user',
+//     localField: '_id',
+// });
 
 // DOCUMENT MIDDLEWARE
 userSchema.pre('save', async function (next) {
