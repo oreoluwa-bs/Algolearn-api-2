@@ -15,4 +15,5 @@ router.route('/:id')
     .patch(enrollController.isMyCourse, enrollController.updateEnrollment)
     .delete(enrollController.isMyCourse, enrollController.deleteEnrollment);
 
+
 module.exports = router;

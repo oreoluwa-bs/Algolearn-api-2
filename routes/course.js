@@ -4,12 +4,14 @@ const authControl = require('../controllers/auth');
 const reviewRouter = require('./review');
 const lessonRouter = require('./lesson');
 const enrollRouter = require('./enroll');
+const questionRouter = require('./questions');
 
 const router = express.Router();
 
 router.use('/:courseId/reviews', reviewRouter);
 router.use('/:courseId/lessons', lessonRouter);
 router.use('/:courseId/enrolls', enrollRouter);
+router.use('/:courseId/test', questionRouter);
 
 router.route('/')
     .get(courseControl.getAllCourses)

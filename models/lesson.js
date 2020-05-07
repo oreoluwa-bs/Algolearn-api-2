@@ -15,7 +15,7 @@ const lessonSchema = new mongoose.Schema({
     course: {
         type: mongoose.Schema.ObjectId,
         ref: 'Course',
-        required: [true, 'A review must belong to a course'],
+        required: [true, 'A lesson must belong to a course'],
     },
     createdAt: {
         type: Date,
