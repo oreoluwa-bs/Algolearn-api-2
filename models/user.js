@@ -85,10 +85,10 @@ userSchema.pre(/^find/, function (next) {
 userSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'enrolledCourses',
-        select: '-reviews -price',
+        select: '-reviews -price -lessons -reviews',
     }).populate({
         path: 'createdCourses',
-        select: '-reviews -price',
+        select: '-reviews -price -lessons -reviews',
     });
     next();
 });

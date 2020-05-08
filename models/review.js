@@ -35,7 +35,7 @@ reviewSchema.index({ course: 1, user: 1 }, { unique: true });
 reviewSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'user',
-        select: 'firstname lastname photo',
+        select: '+firstname +lastname +photo -enrolledCourses -createdCourses',
     });
 
     next();
@@ -56,7 +56,7 @@ reviewSchema.statics.calcAverageRatings = async function (courseId) {
     ]);
     await Course.findByIdAndUpdate(courseId, {
         ratingsAverage: stats[0].avgRating,
-        ratingsQuatity: stats[0].nRatings,
+        ratingsQuantity: stats[0].nRatings,
     });
 };
 

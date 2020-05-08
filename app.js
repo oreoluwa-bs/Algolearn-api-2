@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const mongoSanitze = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 
 const AppError = require('./utils/appError');
@@ -13,18 +14,14 @@ const globalErrorHandler = require('./controllers/error');
 const courseRouter = require('./routes/course');
 const userRouter = require('./routes/user');
 const reviewRouter = require('./routes/review');
+const lessonRouter = require('./routes/lesson');
 
 const app = express();
 
 // GLOBAL MIDDLEWARES
 // Set securrity http headers
 app.use(helmet());
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    next();
-});
+app.use(cors());
 
 // Limit the amount of requests sent from a specific IP
 const limiter = rateLimit({
@@ -62,6 +59,7 @@ app.use(hpp({
 app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/lessons', lessonRouter);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
