@@ -31,7 +31,7 @@ enrollmentSchema.index({ course: 1, user: 1 }, { unique: true });
 enrollmentSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'course',
-        select: 'title slug description',
+        select: 'title slug description color',
     });
 
     next();

@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const colorHandler = require('../utils/colors');
 
 const userSchema = new mongoose.Schema({
     firstname: {
@@ -23,6 +24,7 @@ const userSchema = new mongoose.Schema({
         validate: [validator.isEmail, 'Please provide a valid email'],
     },
     photo: String,
+    color: String,
     role: {
         type: String,
         enum: ['student', 'tutor', 'admin'],
@@ -68,6 +70,8 @@ userSchema.pre('save', async function (next) {
     // only runs if the password has been modified
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
+
+    this.color = colorHandler.generateRandomColor();
     next();
 });
 
