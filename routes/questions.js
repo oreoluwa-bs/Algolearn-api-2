@@ -4,15 +4,15 @@ const authController = require('../controllers/auth');
 
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect, authController.restrictTo('tutor'), questionController.setCourseUserIds, questionController.isMyCourse);
+router.use(authController.protect);
 
 router.route('/')
     .get(questionController.getAllQuestions)
-    .post(questionController.createQuestion);
+    .post(authController.restrictTo('tutor'), questionController.setCourseUserIds, questionController.isMyCourse, questionController.createQuestion);
 
 router.route('/:id')
-    .get(questionController.getQuestion)
-    .patch(questionController.updateQuestion)
-    .delete(questionController.deleteQuestion);
+    .get(authController.restrictTo('tutor'), questionController.setCourseUserIds, questionController.isMyCourse, questionController.getQuestion)
+    .patch(authController.restrictTo('tutor'), questionController.setCourseUserIds, questionController.isMyCourse, questionController.updateQuestion)
+    .delete(authController.restrictTo('tutor'), questionController.setCourseUserIds, questionController.isMyCourse, questionController.deleteQuestion);
 
 module.exports = router;

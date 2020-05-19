@@ -15,6 +15,19 @@ const enrollmentSchema = new mongoose.Schema({
             ref: 'Lesson',
         },
     ],
+    test: {
+        score: {
+            type: Number,
+            default: 0,
+        },
+        attempts: {
+            type: Number,
+            default: 0,
+        },
+        answers: {
+            type: Object,
+        },
+    },
     lastViewed: {
         type: Date,
         default: Date.now(),
