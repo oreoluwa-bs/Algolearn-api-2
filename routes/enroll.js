@@ -10,6 +10,12 @@ router.route('/')
     .get(enrollController.getAllEnrollments)
     .post(enrollController.isMyCourse, enrollController.createEnrollment);
 
+router.route('/enrolled-stats/:year')
+    .get(authController.restrictTo('tutor'), enrollController.getMonthlyEnrolledStats);
+
+router.route('/test-stats/:year')
+    .get(authController.restrictTo('tutor'), enrollController.getMonthlyTestStats);
+
 router.route('/:id')
     .get(enrollController.getEnrollment)
     .patch(enrollController.isMyCourse, enrollController.updateEnrollment)

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const colorHandler = require('../utils/colors');
+const ColorHandler = require('../utils/colors');
 
 const userSchema = new mongoose.Schema({
     firstname: {
@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
         default: true,
         select: false,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        select: false,
+    },
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -71,7 +76,7 @@ userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
 
-    this.color = colorHandler.generateRandomColor();
+    this.color = new ColorHandler().generateRandomColor();
     next();
 });
 

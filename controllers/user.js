@@ -65,3 +65,54 @@ exports.deleteUser = factory.deleteOne(User);
 // exports.getMyCreatedCourses = factory.getAll(Course);
 
 // exports.getCreatedCourse = factory.getOne(Course);
+
+
+exports.getMonthlyUserStats = async (req, res) => {
+    try {
+        const year = req.params.year * 1 ? req.params.year * 1 : new Date().getFullYear();
+        const stats = await User.aggregate([
+            {
+                $unwind: '$createdAt',
+            },
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    numUsers: { $sum: 1 },
+                },
+            },
+            {
+                $addFields: { month: '$_id' },
+            },
+            {
+                $project: {
+                    _id: 0,
+                },
+            },
+            {
+                $sort: { month: 1 },
+            },
+        ]);
+        const userCount = await User.countDocuments();
+        res.status(200).json({
+            status: 'success',
+            data: {
+                year,
+                stats,
+                userCount,
+            },
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err,
+        });
+    }
+};

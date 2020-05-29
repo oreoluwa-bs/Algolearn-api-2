@@ -2,7 +2,7 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const colorHandler = require('../utils/colors');
+const ColorHandler = require('../utils/colors');
 // const User = require('./user');
 
 const courseSchema = new mongoose.Schema({
@@ -87,7 +87,7 @@ courseSchema.pre('save', function (next) {
     const id = this._id.toString();
     this.slug = slugify(`${this.title} ${id.slice(id.length - 4)}`, { lower: true });
 
-    this.color = colorHandler.generateRandomColor();
+    this.color = new ColorHandler().generateRandomColor();
     next();
 });
 

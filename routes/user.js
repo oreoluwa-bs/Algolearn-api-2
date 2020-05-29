@@ -16,6 +16,9 @@ router.post('/login', authControl.login);
 // Only logged in can use these routes
 router.use(authControl.protect);
 
+router.route('/')
+    .get(authControl.restrictTo('admin'), userControl.getAllUsers);
+
 router.patch('/updateMyPassword', authControl.updatePassword);
 
 router.patch('/updateMe', userControl.updateMe);
@@ -30,5 +33,7 @@ router.route('/me')
 // router.route('/me/createdCourses')
 //     .get(userControl.getMe, userControl.getMyCreatedCourses);
 
+router.route('/stats/:year')
+    .get(authControl.restrictTo('admin'), userControl.getMonthlyUserStats);
 
 module.exports = router;

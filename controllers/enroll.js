@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Enrollment = require('../models/enroll');
 const Course = require('../models/course');
 const factory = require('./handlerFactory');
@@ -30,3 +31,121 @@ exports.createEnrollment = factory.createOne(Enrollment);
 exports.updateEnrollment = factory.updateOne(Enrollment);
 
 exports.deleteEnrollment = factory.deleteOne(Enrollment);
+
+exports.getMonthlyEnrolledStats = async (req, res) => {
+    try {
+        const year = req.params.year * 1;
+        // const year = 2020;
+        const course = req.body.course ? mongoose.Types.ObjectId(req.body.course) : null;
+        const plan = await Enrollment.aggregate([
+            {
+                $unwind: '$createdAt',
+            },
+            {
+                $match: {
+                    course: { $eq: course },
+                    createdAt: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`),
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    numEnrolled: { $sum: 1 },
+                    users: { $push: '$user' },
+                },
+            },
+            {
+                $addFields: { month: '$_id' },
+            },
+            {
+                $project: {
+                    _id: 0,
+                },
+            },
+            {
+                $sort: { month: 1 },
+            },
+        ]);
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                plan,
+            },
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err,
+        });
+    }
+};
+
+
+exports.getMonthlyTestStats = async (req, res) => {
+    try {
+        const year = req.params.year * 1;
+        // const year = 2020;
+        const course = mongoose.Types.ObjectId(req.body.course);
+        // req.user && req.user.role !== 'admin'
+        const match = !req.body.course ? {
+            $match: {
+                course: { $eq: course },
+                createdAt: {
+                    $gte: new Date(`${year}-01-01`),
+                    $lte: new Date(`${year}-12-31`),
+                },
+            },
+        }
+            : {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`),
+                    },
+                },
+            };
+
+        console.log(match);
+        const plan = await Enrollment.aggregate([
+            {
+                $unwind: '$createdAt',
+            },
+            { ...match },
+            {
+                $group: {
+                    _id: { $month: '$createdAt' },
+                    // numAnswered: { $sum: 1 },
+                    avgTestScores: { $avg: '$test.score' },
+                    users: { $push: '$user' },
+                },
+            },
+            {
+                $addFields: { month: '$_id' },
+            },
+            {
+                $project: {
+                    _id: 0,
+                },
+            },
+            {
+                $sort: { month: 1 },
+            },
+        ]);
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                plan,
+            },
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err,
+        });
+    }
+};

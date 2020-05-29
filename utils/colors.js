@@ -1,4 +1,4 @@
-class colorHandler {
+class ColorHandler {
     constructor() {
         this.colors = [
             '#78C3FB', '#C28CAE', '#49475B', '#799496', '#4F646F',
@@ -20,7 +20,7 @@ class colorHandler {
         return this.colors[Math.floor(Math.random() * this.colors.length)];
     }
 }
-module.exports = colorHandler;
+module.exports = ColorHandler;
 
 // const colors = [
 //     '#78C3FB', '#C28CAE', '#49475B', '#799496', '#4F646F',
