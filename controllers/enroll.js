@@ -34,10 +34,9 @@ exports.deleteEnrollment = factory.deleteOne(Enrollment);
 
 exports.getMonthlyEnrolledStats = async (req, res) => {
     try {
-        const year = req.params.year * 1;
-        // const year = 2020;
+        const year = req.params.year * 1 ? req.params.year * 1 : new Date().getFullYear();
         const course = req.body.course ? mongoose.Types.ObjectId(req.body.course) : null;
-        const plan = await Enrollment.aggregate([
+        const stats = await Enrollment.aggregate([
             {
                 $unwind: '$createdAt',
             },
@@ -73,7 +72,7 @@ exports.getMonthlyEnrolledStats = async (req, res) => {
         res.status(200).json({
             status: 'success',
             data: {
-                plan,
+                stats,
             },
         });
     } catch (err) {
@@ -85,61 +84,30 @@ exports.getMonthlyEnrolledStats = async (req, res) => {
 };
 
 
-exports.getMonthlyTestStats = async (req, res) => {
+exports.getEnrolledTestStats = async (req, res) => {
     try {
-        const year = req.params.year * 1;
-        // const year = 2020;
         const course = mongoose.Types.ObjectId(req.body.course);
-        // req.user && req.user.role !== 'admin'
-        const match = !req.body.course ? {
-            $match: {
-                course: { $eq: course },
-                createdAt: {
-                    $gte: new Date(`${year}-01-01`),
-                    $lte: new Date(`${year}-12-31`),
-                },
-            },
-        }
-            : {
-                $match: {
-                    createdAt: {
-                        $gte: new Date(`${year}-01-01`),
-                        $lte: new Date(`${year}-12-31`),
-                    },
-                },
-            };
-
-        console.log(match);
-        const plan = await Enrollment.aggregate([
+        const stats = await Enrollment.aggregate([
             {
-                $unwind: '$createdAt',
+                $match: {
+                    course: { $eq: course },
+                },
             },
-            { ...match },
             {
                 $group: {
-                    _id: { $month: '$createdAt' },
+                    _id: '$test.score',
                     // numAnswered: { $sum: 1 },
                     avgTestScores: { $avg: '$test.score' },
                     users: { $push: '$user' },
+
                 },
-            },
-            {
-                $addFields: { month: '$_id' },
-            },
-            {
-                $project: {
-                    _id: 0,
-                },
-            },
-            {
-                $sort: { month: 1 },
             },
         ]);
 
         res.status(200).json({
             status: 'success',
             data: {
-                plan,
+                stats,
             },
         });
     } catch (err) {

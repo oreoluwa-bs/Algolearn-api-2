@@ -14,7 +14,7 @@ router.route('/enrolled-stats/:year')
     .get(authController.restrictTo('tutor'), enrollController.getMonthlyEnrolledStats);
 
 router.route('/test-stats/:year')
-    .get(authController.restrictTo('tutor'), enrollController.getMonthlyTestStats);
+    .get(authController.restrictTo('tutor'), enrollController.getEnrolledTestStats);
 
 router.route('/:id')
     .get(enrollController.getEnrollment)

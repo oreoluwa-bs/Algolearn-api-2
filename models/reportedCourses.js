@@ -14,6 +14,10 @@ const reportedCoursesSchema = new mongoose.Schema({
         ref: 'Course',
         required: [true, 'A report must belong to a course'],
     },
+    lesson: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Lesson',
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
@@ -27,6 +31,9 @@ const reportedCoursesSchema = new mongoose.Schema({
 reportedCoursesSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'course',
+        select: 'slug title',
+    }).populate({
+        path: 'lesson',
         select: 'slug title',
     }).populate({
         path: 'user',
