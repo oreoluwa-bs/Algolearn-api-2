@@ -15,12 +15,8 @@ const lessonSchema = new mongoose.Schema({
     course: {
         type: mongoose.Schema.ObjectId,
         ref: 'Course',
-        required: [true, 'A review must belong to a course'],
+        required: [true, 'A lesson must belong to a course'],
     },
-    // isPublic: {
-    //     type: Boolean,
-    //     default: true,
-    // },
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -34,7 +30,7 @@ lessonSchema.index({ course: 1, slug: 1 }, { unique: true });
 // DOCUMENT MIDDLEWARE
 lessonSchema.pre('save', function (next) {
     const id = this._id.toString();
-    this.slug = slugify(`${this.title} ${id.slice(id.length - 4)}`, { lower: true });
+    this.slug = slugify(`${this.title} ${id.slice(id.length - 2)}`, { lower: true });
     next();
 });
 

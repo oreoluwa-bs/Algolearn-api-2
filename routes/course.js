@@ -3,11 +3,15 @@ const courseControl = require('../controllers/course');
 const authControl = require('../controllers/auth');
 const reviewRouter = require('./review');
 const lessonRouter = require('./lesson');
+const enrollRouter = require('./enroll');
+const questionRouter = require('./questions');
 
 const router = express.Router();
 
 router.use('/:courseId/reviews', reviewRouter);
 router.use('/:courseId/lessons', lessonRouter);
+router.use('/:courseId/enrolls', enrollRouter);
+router.use('/:courseId/test', questionRouter);
 
 router.route('/')
     .get(courseControl.getAllCourses)
@@ -20,8 +24,8 @@ router.route('/:id')
     .patch(authControl.protect, authControl.restrictTo('tutor'), courseControl.updateCourse)
     .delete(authControl.protect, authControl.restrictTo('tutor'), courseControl.deleteCourse);
 
-router.route('/enroll/:courseId')
-    .patch(authControl.protect, courseControl.enrollInCourse)
-    .delete(authControl.protect, courseControl.unEnrollInCourse);
+// router.route('/enroll/:courseId')
+//     .patch(authControl.protect, courseControl.enrollInCourse)
+//     .delete(authControl.protect, courseControl.unEnrollInCourse);
 
 module.exports = router;

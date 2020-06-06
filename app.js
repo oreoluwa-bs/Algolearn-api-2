@@ -14,7 +14,9 @@ const globalErrorHandler = require('./controllers/error');
 const courseRouter = require('./routes/course');
 const userRouter = require('./routes/user');
 const reviewRouter = require('./routes/review');
+// const enrollRouter = require('./routes/enroll');
 const lessonRouter = require('./routes/lesson');
+const reportRouter = require('./routes/reportedCourse');
 
 const app = express();
 
@@ -25,7 +27,7 @@ app.use(cors());
 
 // Limit the amount of requests sent from a specific IP
 const limiter = rateLimit({
-    max: 100,
+    max: 300,
     windowMs: 60 * 60 * 1000,
     message: 'Too many requests from this IP, please try again in an hour!',
 });
@@ -60,6 +62,7 @@ app.use('/api/v1/courses', courseRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/lessons', lessonRouter);
+app.use('/api/v1/reports', reportRouter);
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

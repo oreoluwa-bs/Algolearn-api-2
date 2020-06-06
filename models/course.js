@@ -2,7 +2,8 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./user');
+const ColorHandler = require('../utils/colors');
+// const User = require('./user');
 
 const courseSchema = new mongoose.Schema({
     title: {
@@ -50,6 +51,10 @@ const courseSchema = new mongoose.Schema({
         ref: 'User',
     },
     color: String,
+    enrollmentCount: {
+        type: Number,
+        default: 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now(),
@@ -81,14 +86,16 @@ courseSchema.virtual('lessons', {
 courseSchema.pre('save', function (next) {
     const id = this._id.toString();
     this.slug = slugify(`${this.title} ${id.slice(id.length - 4)}`, { lower: true });
+
+    this.color = new ColorHandler().generateRandomColor();
     next();
 });
 
-courseSchema.post('save', async function () {
-    const author = await User.findById(this.author);
-    author.createdCourses.push(this._id);
-    author.save();
-});
+// courseSchema.post('save', async function () {
+//     const author = await User.findById(this.author);
+//     author.createdCourses.push(this._id);
+//     author.saXve();
+// });
 
 
 // QUERY MIDDLEWARE
@@ -99,7 +106,7 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre(/^find/, function (next) {
     this.populate({
         path: 'author',
-        select: '+firstname +lastname -enrolledCourses -createdCourses -email',
+        select: '+firstname +lastname -createdCourses -email -enrollmentCount -role -passwordChangedAt',
     });
     next();
 });

@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const ColorHandler = require('../utils/colors');
 
 const userSchema = new mongoose.Schema({
     firstname: {
@@ -23,6 +24,7 @@ const userSchema = new mongoose.Schema({
         validate: [validator.isEmail, 'Please provide a valid email'],
     },
     photo: String,
+    color: String,
     role: {
         type: String,
         enum: ['student', 'tutor', 'admin'],
@@ -34,18 +36,10 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         select: false,
     },
-    enrolledCourses: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Course',
-        },
-    ],
-    createdCourses: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Course',
-        },
-    ],
+    enrollmentCount: {
+        type: Number,
+        default: 0,
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
@@ -54,16 +48,35 @@ const userSchema = new mongoose.Schema({
         default: true,
         select: false,
     },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        select: false,
+    },
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
+
+// userSchema.virtual('enrolledCourses', {
+//     ref: 'Enrollment',
+//     foreignField: 'user',
+//     localField: '_id',
+// });
+// createdCourses: [
+//     {
+//         type: mongoose.Schema.ObjectId,
+//         ref: 'Course',
+//     },
+// ],
 
 // DOCUMENT MIDDLEWARE
 userSchema.pre('save', async function (next) {
     // only runs if the password has been modified
     if (!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
+
+    this.color = new ColorHandler().generateRandomColor();
     next();
 });
 
@@ -82,16 +95,18 @@ userSchema.pre(/^find/, function (next) {
     next();
 });
 
-userSchema.pre(/^find/, function (next) {
-    this.populate({
-        path: 'enrolledCourses',
-        select: '-reviews -price -lessons -reviews',
-    }).populate({
-        path: 'createdCourses',
-        select: '-reviews -price -lessons -reviews',
-    });
-    next();
-});
+// userSchema.pre(/^find/, function (next) {
+//     // this.populate({
+//     //     path: 'enrolledCourses',
+//     //     select: '-reviews -price -lessons -reviews',
+//     // })
+//     this.populate({
+//         path: 'createdCourses',
+//         select: '-reviews -price -lessons -reviews',
+//     });
+
+//     next();
+// });
 
 
 // INSTANCE METHODS

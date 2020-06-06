@@ -4,15 +4,15 @@ const authController = require('../controllers/auth');
 
 const router = express.Router({ mergeParams: true });
 
-router.use(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse);
+// router.use();
 
 router.route('/')
     .get(lessonController.getAllLessons)
-    .post(lessonController.createLesson);
+    .post(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.createLesson);
 
 router.route('/:id')
     .get(lessonController.getLesson)
-    .patch(lessonController.updateLesson)
-    .delete(lessonController.deleteLesson);
+    .patch(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.updateLesson)
+    .delete(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.deleteLesson);
 
 module.exports = router;
