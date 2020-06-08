@@ -1,5 +1,6 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
-// const Course = require('./course');
+const Course = require('./course');
 
 const testOptionSchema = new mongoose.Schema({
     text: {
@@ -30,6 +31,29 @@ const testQuestionSchema = new mongoose.Schema({
         select: false,
     },
 });
+
+// STATIC METHODS
+testQuestionSchema.statics.calcTestQuestionCount = async function (courseId) {
+    const stats = await this.aggregate([
+        {
+            $match: { course: courseId },
+        },
+        {
+            $group: {
+                _id: '$course',
+                nTestQuestion: { $sum: 1 },
+            },
+        },
+    ]);
+    await Course.findByIdAndUpdate(courseId, {
+        testQuestionCount: stats[0].nTestQuestion,
+    });
+};
+
+testQuestionSchema.post('save', function () {
+    this.constructor.calcTestQuestionCount(this.course);
+});
+
 
 const TestQuestion = mongoose.model('TestQuestion', testQuestionSchema);
 
