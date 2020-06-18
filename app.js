@@ -5,6 +5,7 @@ const mongoSanitze = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
+const path = require('path');
 
 
 const AppError = require('./utils/appError');
@@ -21,6 +22,9 @@ const reportRouter = require('./routes/reportedCourse');
 const app = express();
 
 // GLOBAL MIDDLEWARES
+// Serving Static Files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Set securrity http headers
 app.use(helmet());
 app.use(cors());
