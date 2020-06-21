@@ -8,11 +8,11 @@ const router = express.Router({ mergeParams: true });
 
 router.route('/')
     .get(lessonController.getAllLessons)
-    .post(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.createLesson);
+    .post(authController.protect, authController.restrictTo('tutor'), lessonController.uploadLessonVideo, lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.saveVideo, lessonController.createLesson);
 
 router.route('/:id')
     .get(lessonController.getLesson)
-    .patch(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.updateLesson)
+    .patch(authController.protect, authController.restrictTo('tutor'), lessonController.uploadLessonVideo, lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.saveVideo, lessonController.updateLesson)
     .delete(authController.protect, authController.restrictTo('tutor'), lessonController.setCourseUserIds, lessonController.isMyCourse, lessonController.deleteLesson);
 
 module.exports = router;
