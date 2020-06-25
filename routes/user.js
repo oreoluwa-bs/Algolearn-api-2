@@ -27,7 +27,8 @@ router.delete('/deleteMe', userControl.deleteMe);
 
 router.route('/me')
     .get(userControl.getMe, userControl.getUser)
-    .patch(userControl.getMe, userControl.updateMe)
+    .patch(userControl.getMe, userControl.uploadUserPhoto,
+        userControl.resizeUserPhoto, userControl.updateMe)
     .delete(userControl.getMe, userControl.deleteMe);
 
 // router.route('/me/createdCourses')
