@@ -5,6 +5,7 @@ const reviewRouter = require('./review');
 const lessonRouter = require('./lesson');
 const enrollRouter = require('./enroll');
 const questionRouter = require('./questions');
+const messageRouter = require('./message');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.use('/:courseId/reviews', reviewRouter);
 router.use('/:courseId/lessons', lessonRouter);
 router.use('/:courseId/enrolls', enrollRouter);
 router.use('/:courseId/test', questionRouter);
+router.use('/:courseId/discussions', messageRouter);
 
 router.route('/')
     .get(courseControl.getAllCourses)
