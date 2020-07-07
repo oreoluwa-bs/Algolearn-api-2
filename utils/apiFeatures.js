@@ -13,7 +13,7 @@ class APIFeatures {
         // 1b)  Advanced filtering
         let queryString = JSON.stringify(queryObject);
         // reg-ex to replace gte or gt ... with $gte or $gt ...
-        queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+        queryString = queryString.replace(/\b(gte|gt|lte|lt|ne)\b/g, (match) => `$${match}`);
 
         this.query.find(JSON.parse(queryString));
 

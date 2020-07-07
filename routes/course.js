@@ -26,6 +26,9 @@ router.route('/:id')
     .patch(authControl.protect, authControl.restrictTo('tutor'), courseControl.updateCourse)
     .delete(authControl.protect, authControl.restrictTo('tutor'), courseControl.deleteCourse);
 
+router.route('/recommend/:id')
+    .get(courseControl.handleRecommendations);
+
 // router.route('/enroll/:courseId')
 //     .patch(authControl.protect, courseControl.enrollInCourse)
 //     .delete(authControl.protect, courseControl.unEnrollInCourse);
