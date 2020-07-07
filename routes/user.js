@@ -37,4 +37,9 @@ router.route('/me')
 router.route('/stats/:year')
     .get(authControl.restrictTo('admin'), userControl.getMonthlyUserStats);
 
+router.route('/dummy')
+    // .get(authControl.restrictTo('admin'), userControl.getAllUsers)
+    .post(authControl.restrictTo('admin'), userControl.createDummyUsers)
+    .delete(authControl.restrictTo('admin'), userControl.deleteDummyUsers);
+
 module.exports = router;

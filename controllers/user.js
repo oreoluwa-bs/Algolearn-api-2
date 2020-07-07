@@ -7,6 +7,10 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
+const dummyStudent = require('../dummyData/usersStudent.json');
+const dummyTutor = require('../dummyData/userTutor.json');
+const dummyAdmin = require('../dummyData/userAdmin.json');
+
 // const multerStorage = multer.diskStorage({
 //     destination: (req, file, cb) => {
 //         cb(null, 'public/images/users');
@@ -155,6 +159,42 @@ exports.getMonthlyUserStats = async (req, res) => {
         res.status(404).json({
             status: 'fail',
             message: err,
+        });
+    }
+};
+
+exports.createDummyUsers = (req, res, next) => {
+    try {
+        const dummies = [...dummyStudent, ...dummyTutor, ...dummyAdmin];
+
+        dummies.forEach((dummy) => User.create(dummy));
+
+        res.status(200).json({
+            status: 'success',
+            message: 'dummies created',
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'dummies not created',
+        });
+    }
+};
+
+exports.deleteDummyUsers = (req, res, next) => {
+    try {
+        const dummies = [...dummyStudent, ...dummyTutor, ...dummyAdmin];
+
+        dummies.forEach((dummy) => User.findOneAndDelete({ email: dummy.email }));
+
+        res.status(201).json({
+            status: 'success',
+            message: 'dummies deleted',
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'dummies not deleted',
         });
     }
 };

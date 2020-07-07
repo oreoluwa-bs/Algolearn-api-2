@@ -79,8 +79,8 @@ exports.getAll = (Model) => catchAsync(async (req, res, next) => {
     const features = new APIFeatures(Model.find(filter), req.query)
         .filter()
         .sort()
-        .limitFields()
-        .paginate();
+        .limitFields();
+        // .paginate();
 
     const doc = await features.query;
 

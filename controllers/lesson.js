@@ -26,7 +26,10 @@ exports.uploadLessonVideo = upload.single('video');
 
 
 exports.saveVideo = async (req, res, next) => {
-    if (!req.file) return next();
+    if (!req.file) {
+        req.body.video = null;
+        return next();
+    }
 
     const ext = req.file.mimetype.split('/')[1];
     req.file.filename = `course-${req.params.courseId}-${Date.now()}.${ext}`;
