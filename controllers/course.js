@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 const ContentBasedRecommender = require('content-based-recommender');
+const mongoose = require('mongoose');
 const Course = require('../models/course');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
@@ -67,11 +68,50 @@ exports.handleRecommendations = catchAsync(async (req, res, next) => {
 
     const finalRecommendations = await Course.find({ _id: { $in: similarIds } });
 
-    res.status(200).json({
-        status: 'success',
-        results: finalRecommendations.length,
-        data: {
-            data: finalRecommendations,
-        },
-    });
+    if (finalRecommendations.length < 1) {
+        await Course.aggregate([
+            { $match: { _id: { $ne: mongoose.Types.ObjectId(req.params.id) } } },
+            { $sample: { size: 4 } }])
+            .exec((_err, recommendations) => {
+                if (_err) {
+                    res.status(200).json({
+                        status: 'success',
+                        results: 0,
+                        data: {
+                            data: [],
+                        },
+                    });
+                }
+                Course.populate(recommendations,
+                    {
+                        path: 'author',
+                        select: '+firstname +lastname +color +photo -createdCourses -email -enrollmentCount -role -passwordChangedAt',
+                    }, (_errr, populatedRecommendations) => {
+                        if (_errr) {
+                            res.status(200).json({
+                                status: 'success',
+                                results: 0,
+                                data: {
+                                    data: [],
+                                },
+                            });
+                        }
+                        res.status(200).json({
+                            status: 'success',
+                            results: populatedRecommendations.length,
+                            data: {
+                                data: populatedRecommendations,
+                            },
+                        });
+                    });
+            });
+    } else {
+        res.status(200).json({
+            status: 'success',
+            results: finalRecommendations.length,
+            data: {
+                data: finalRecommendations,
+            },
+        });
+    }
 });
