@@ -68,6 +68,14 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/lessons', lessonRouter);
 app.use('/api/v1/reports', reportRouter);
 
+const welcomeRoute = (req, res, next) => {
+    res.send('Welcome');
+    next();
+};
+
+app.get('/', welcomeRoute);
+app.get('/api/v1/', welcomeRoute);
+
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
