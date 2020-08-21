@@ -4,3 +4,8 @@ public/videos/courses
 public/images/users
 
 dummyData/
+
+.env
+.env.example
+.env.local
+.env.staging
