@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    createdCoursesCount: {
+        type: Number,
+        default: 0,
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

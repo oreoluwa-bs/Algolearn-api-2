@@ -3,13 +3,13 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const ColorHandler = require('../utils/colors');
-// const User = require('./user');
+const User = require('./user');
 
 const courseSchema = new mongoose.Schema({
     title: {
         type: String,
         trim: true,
-        maxlength: [50, 'A tour name must have less or equal than 40 characters'],
+        maxlength: [50, 'A course name must have less or equal than 50 characters'],
         required: [true, 'A course must have a title'],
     },
     slug: String,
@@ -44,7 +44,7 @@ const courseSchema = new mongoose.Schema({
     price: {
         type: Number,
         default: 0,
-        required: [true, 'A tour must have a price'],
+        required: [true, 'A course must have a price'],
     },
     author: {
         type: mongoose.Schema.ObjectId,
@@ -119,6 +119,28 @@ courseSchema.pre(/^find/, function (next) {
 courseSchema.pre('aggregate', function (next) {
     this.pipeline().unshift({ $match: { isPublished: { $ne: false } } });
     next();
+});
+
+// STATIC METHODS
+courseSchema.statics.calcCreatedCoursesCount = async function (authorId) {
+    const stats = await this.aggregate([
+        {
+            $match: { author: authorId },
+        },
+        {
+            $group: {
+                _id: '$author',
+                nCourses: { $sum: 1 },
+            },
+        },
+    ]);
+    await User.findByIdAndUpdate(authorId, {
+        createdCoursesCount: stats[0].nCourses,
+    });
+};
+
+courseSchema.post('save', function () {
+    this.constructor.calcCreatedCoursesCount(this.author);
 });
 
 const Course = mongoose.model('Course', courseSchema);
