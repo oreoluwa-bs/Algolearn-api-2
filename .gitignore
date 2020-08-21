@@ -1,7 +1,7 @@
 node_modules
 
-public/videos/courses
-public/images/users
+# public/videos/courses
+# public/images/users
 
 # dummyData/
 
