@@ -6,7 +6,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 const path = require('path');
-
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/error');
@@ -59,6 +59,9 @@ app.use(hpp({
         'price',
     ],
 }));
+
+// compress requests
+app.use(compression());
 
 
 // ROUTES

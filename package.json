@@ -23,6 +23,7 @@
   "homepage": "https://github.com/oreoluwa-bs/Algolearn-api-2#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "content-based-recommender": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
