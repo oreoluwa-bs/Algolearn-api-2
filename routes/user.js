@@ -9,8 +9,8 @@ router.use('/me/enrolls', enrollRouter);
 
 router.post('/signup', authControl.signup);
 router.post('/login', authControl.login);
-// router.post('/forgotPassword', authControl.forgotPassword);
-// router.patch('/resetPassword/:token', authControl.resetPassword);
+router.post('/forgotPassword', authControl.forgotPassword);
+router.patch('/resetPassword/:token', authControl.resetPassword);
 
 
 // Only logged in can use these routes
