@@ -14,7 +14,7 @@ module.exports = class Email {
 
     // eslint-disable-next-line class-methods-use-this
     newTransport() {
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'send-ino-production') {
             // sendgrid
             return nodemailer.createTransport({
                 service: 'SendGrid',
